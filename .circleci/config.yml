@@ -5,11 +5,6 @@
 version: 2
 jobs:
 
-  beggining:
-    machine: true
-    steps:
-      - run: ls -al
-
   test1:
     machine: true
 
@@ -37,128 +32,48 @@ jobs:
 
   test2:
     machine: true
-
     steps:
       - checkout
-
-      ## Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "composer.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
-
-      #- run: composer install -n --prefer-dist
-
-      #- save_cache:
-      #    paths:
-      #      - ./vendor
-      #    key: v1-dependencies-{{ checksum "composer.json" }}
-        
-      # run tests!
       - run: cd docker && docker-compose up -d
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpunit tests/Unit'
 
   test3:
     machine: true
-
     steps:
       - checkout
-
-      ## Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "composer.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
-
-      #- run: composer install -n --prefer-dist
-
-      #- save_cache:
-      #    paths:
-      #      - ./vendor
-      #    key: v1-dependencies-{{ checksum "composer.json" }}
-        
-      # run tests!
       - run: cd docker && docker-compose up -d
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpunit tests/Unit'
 
   test4:
     machine: true
-
     steps:
       - checkout
-
-      ## Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "composer.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
-
-      #- run: composer install -n --prefer-dist
-
-      #- save_cache:
-      #    paths:
-      #      - ./vendor
-      #    key: v1-dependencies-{{ checksum "composer.json" }}
-        
-      # run tests!
       - run: cd docker && docker-compose up -d
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpunit tests/Unit'
 
   test5:
     machine: true
-
     steps:
       - checkout
-
-      ## Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "composer.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
-
-      #- run: composer install -n --prefer-dist
-
-      #- save_cache:
-      #    paths:
-      #      - ./vendor
-      #    key: v1-dependencies-{{ checksum "composer.json" }}
-        
-      # run tests!
       - run: cd docker && docker-compose up -d
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpunit tests/Unit'
 
   checkstyle:
     machine: true
-
     steps:
       - checkout
-
-      ## Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "composer.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
-
-      #- run: composer install -n --prefer-dist
-
-      #- save_cache:
-      #    paths:
-      #      - ./vendor
-      #    key: v1-dependencies-{{ checksum "composer.json" }}
-
-      # run tests!
       - run: cd docker && docker-compose up -d
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpcs --report-width=120 --standard=PSR1 tests/Unit'
+
+  startingup:
+    machine: true
+    steps:
+      - run: ls -al
 
   finish:
     machine: true
@@ -169,24 +84,30 @@ workflows:
   version: 2
   build:
     jobs:
-      - beggining
+      - startingup
       - test1:
           requires:
-            - beggining
+            - startingup
       - test2:
           requires:
-            - beggining
+            - startingup
       - test3:
           requires:
-            - beggining
+            - startingup
       - test4:
           requires:
-            - beggining
+            - startingup
       - test5:
           requires:
-            - beggining
+            - startingup
       - checkstyle
+          requires:
+            - startingup
       - finish:
           requires:
             - test1
+            - test2
+            - test3
+            - test4
+            - test5
             - checkstyle
