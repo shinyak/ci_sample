@@ -68,6 +68,11 @@ jobs:
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && composer install --dev'
       - run: cd docker && docker-compose run allinone /bin/bash -c 'cd /var/www/html/ci_sample && ./vendor/bin/phpcs --report-width=120 --standard=PSR1 tests/Unit'
 
+  startup:
+    machine: true
+    steps:
+      - run: ls -al
+
   finish:
     machine: true
     steps:
@@ -77,6 +82,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - startup
       - test1
       - test2
       - test3
