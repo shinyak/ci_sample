@@ -84,17 +84,9 @@ workflows:
     jobs:
       - startup
       - test1
-          requires:
-            - startup
       - test2
-          requires:
-            - startup
       - test3
-          requires:
-            - startup
       - checkstyle
-          requires:
-            - startup
       - finish:
           requires:
             - test1
